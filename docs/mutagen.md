@@ -39,10 +39,80 @@ with only a few minor differences to account for their different purposes.
 To create sync session, you use `mutagen sync create` command.
 
 ```shell script
-# Create a sync session named "web-app-code" between the local path ~/project and a 
+# Create a sync session named "test" between the local path ~/mutagen_test and a 
 # SSH-accessible endpoint. 
-mutagen sync create --name=web-app-code ~/project user@example.org:~/project
+mutagen sync create --name=test ~/mutagen_test john@:~/mutagen_test
 ``` 
 
 For SSH-accessible endpoints,Mutagen uses OpenSSH under the hood, so all of your settings, keys and
 aliases will automatically available.
+
+## Session identification
+Once session is created, each Mutagen session can be addressed in three different ways: by name,
+by a label, or by session identifier. Labels are optional key-value pairs that can be attached to
+sessions and queried to perform more complex session selection. Sessions identifiers are unique 
+strings that Mutagen generates automatically, allowing for unambiguous session specification.
+
+## Listings sessions
+```shell script
+$ mutagen sync list
+Name: test
+Identifier: sync_1MugMKr3HOZxR7Z768KCslzSmz4RHrU2z5TsjWODbFf
+Labels: None
+Alpha:
+        URL: /Users/abrarkhan/mutagen_test
+        Connection state: Connected
+Beta:
+        URL: john@192.168.8.101:~/mutagen_test
+        Connection state: Connected
+Status: Watching for changes
+```
+
+## Monitoring a session
+The monitor command shows live monitoring info for a session
+
+```shell script
+$ mutagen sync monitor test
+Name: test
+Identifier: sync_1MugMKr3HOZxR7Z768KCslzSmz4RHrU2z5TsjWODbFf
+Labels: None
+Alpha: /Users/abrarkhan/mutagen_test
+Beta: john@192.168.8.101:~/mutagen_test
+Status: Staging files on beta: 75% (8942/11782)/Watching for changes
+``` 
+
+## Pausing Sessions
+Synchronization can be temorarily halted for a session using the `pause` command
+
+```shell script
+$ mutagen sync pause test 
+``` 
+
+## Resuming sessions
+Sessions can be resumed using `resume` command
+
+```shell script
+mutagen sync resume test
+``` 
+
+## Flushing sessions
+Synchronization cycles can be manually triggered for synchronization sessions
+
+```shell script
+mutagen sync flush test
+```
+
+## Resetting sessions
+Synchronization sessions can have their histories cleared(causing them to behave like newly created
+sessions with the same configuration).
+
+```shell script
+mutagen sync reset test
+```
+
+## Terminating sessions
+Synchronization can be permanently halted(and the session deleted) 
+
+```shell script
+mutagen sync terminate test
+```
